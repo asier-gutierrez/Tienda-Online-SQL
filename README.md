@@ -21,7 +21,7 @@ Estas son las carácterísticas de este proyecto:
 Nuestra base de datos utiliza estas tecnologías de manera directa:
 
 * [Oracle 11g] - Versión de la base de datos que utilizamos.
-* [SQL plus] - Editor que usamos.
+* [SQL plus] - Programa de ejecución que usamos. [Línea de comandos]
 
 
 
