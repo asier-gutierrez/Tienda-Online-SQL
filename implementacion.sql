@@ -1,12 +1,17 @@
 /*FICHERO PARA CREACIÃ“N DE BASE DE DATOS*/
 
 /*CIU*/
+/*La tabla ciudad consta de un numero id, que sera la clave primaria y el identificador de la cidad que le ha sido asignada.
+ *y el nombre es de una ciudad en concreto por ejemplo: Madrid. Ninguno de los atributos puede ser nulo */
 CREATE TABLE CIUDAD (
 ID NUMBER(5) CONSTRAINT CIU_ID_NN NOT NULL CONSTRAINT CIU_ID_PK PRIMARY KEY,
 NOMBRE VARCHAR(30) CONSTRAINT CIU_NOMBRE_NN NOT NULL CONSTRAINT CIU_NOMBRE_UN UNIQUE
 );
 
 /*USU*/
+/*La tabla ciudad consta de un dni para poder identificar al usuario y la clave primaria,nombre y appellido del usuario,email con el cual se 
+ * pondra en contacto y recibira informacion del pedido, una contraseña (CONTRA)con la cual asegurara su cuenta de usuario y por ultimo la fecha
+ * de nacimiento para saber si es un adulto o un niño.*/
 CREATE TABLE USUARIO(
 DNI VARCHAR(9) CONSTRAINT USU_DNI_NN NOT NULL CONSTRAINT USU_DNI_PK PRIMARY KEY,
 NOMBRE VARCHAR(25) CONSTRAINT USU_NOMBRE_NN NOT NULL CONSTRAINT USU_NOMBRE_UN UNIQUE,
@@ -17,12 +22,18 @@ FECHA_NACIMIENTO DATE CONSTRAINT USU_FECHA_NACIMIENTO_NN NOT NULL
 );
 
 /*T_DT_BN*/
+/*La tabla tipo de dato bancario(TIPO_DATO_BANCARIO) consta de un numero que identifica el tipo de dato y la cual es la clave primaria
+ * y la denominacion que describe que clase de dato es, como por ejemplo: tarjeta debito, tarjeta credito...*/
 CREATE TABLE TIPO_DATO_BANCARIO(
 ID NUMBER(2) CONSTRAINT T_DT_BN_ID_NN NOT NULL CONSTRAINT T_DT_BN_ID_PK PRIMARY KEY,
 DENOMINACION VARCHAR (25) CONSTRAINT T_DT_BN_DENOMINACION_NN NOT NULL CONSTRAINT T_DT_BN_DENOMINACION_UN UNIQUE
 );
 
 /*DT_BN*/
+/*La tabla dato bancario que contiene los atributos: num que es la clave principal y es el numero de la cuenta bancaria del usuario ,
+ * el cvv son los tres ultimos digitos que se encuentra al reves de la tarjeta,para aquellos que quieran hacer el pago con tarjeta
+ * el tipo de dato bancario(ID_TIPO_DATO_BANCARIO)hace referencia a la tabla tipo_dato_bancario,la cual se incluye en esta tambien pro que pertenece al mismo grupo
+ * y el dni del usuario(USUARIO_DNI) hace referencia al dni de la tabla usuario, se necesita saber los datos del usuario para poder identificarlos*/
 CREATE TABLE DATO_BANCARIO(
 NUM VARCHAR(70) CONSTRAINT DT_BN_NUM_NN NOT NULL CONSTRAINT DT_BN_NUM_PK PRIMARY KEY ON DELETE CASCADE,
 CVV NUMBER(3),
@@ -31,18 +42,24 @@ USUARIO_DNI VARCHAR(9) CONSTRAINT DT_BN_USUARIO_DNI_NN NOT NULL CONSTRAINT DT_BN
 );
 
 /*PST*/
+/*La tabla PUESTO consta de un numero id el cual da una identificacion al puesto que se cubre
+ * y la denominacion es la descripcion del puesto por ejemplo: almacen, oficina */
 CREATE TABLE PUESTO(
 ID NUMBER(4) CONSTRAINT PST_ID_NN NOT NULL CONSTRAINT PST_ID_PK PRIMARY KEY,
 DENOMINACION VARCHAR(30) CONSTRAINT PST_DENOMINACION_NN NOT NULL CONSTRAINT PST_DENOMINACION_UN UNIQUE
 );
 
 /*ET_PED*/
+/*La tabla ESTADO_PEDIDO es para llevar un seguimiento y saber como se encuentra el pedido. Esta consta de un numero id, el cual identifa el pedido y lo distingue de los demas
+ * y la denominacion con la cual se describe el estado del pedido, esta puede ser como por ejemplo: enviado, pagado, devuelto...*/
 CREATE TABLE ESTADO_PEDIDO(
 ID NUMBER(2) CONSTRAINT ET_PED_ID_NN NOT NULL CONSTRAINT ET_PED_ID_PK PRIMARY KEY,
 DENOMINACION VARCHAR(20) ET_PED_DENOMINACION_NN NOT NULL CONSTRAINT ET_PED_DENOMINACION_UN UNIQUE
 );
 
 /*COD_PS*/
+/*La crecion de la tabla pedido esta pensada para agrupar las direcciones de la ciudades las cuales se van a enviar el pedido. Esta consta de un codigo, este es el codigo postal
+ * y el id de la ciudad al cual pertenece el codigo y hace referencia al id de la tabla ciudad.*/
 CREATE TABLE CODIGO_POSTAL(
 CODIGO NUMBER(7) CONSTRAINT COD_PS_CODIGO_NN NOT NULL CONSTRAINT COD_PS_CODIGO_PK PRIMARY KEY,
 CIUDAD_ID NUMBER(5) CONSTRAINT COD_PS_CIUDAD_ID_NN NOT NULL CONSTRAINT COD_PS_CIUDAD_ID_FK_CIU REFERENCES CIUDAD(ID) ON DELETE CASCADE
@@ -50,6 +67,10 @@ CIUDAD_ID NUMBER(5) CONSTRAINT COD_PS_CIUDAD_ID_NN NOT NULL CONSTRAINT COD_PS_CI
 
 
 /*DIR*/
+/*La tabla direccion esta compuesta por un id,este sera el indentifcador de la direccion,
+ * la direccion (DIR) la cual sera de tipo varchar, ya que se necesita proporcionar una direccion,
+ * el id de la ciudad, el cual hace referencia a la tabla ciudad ya que ambas tablas estan conectadas
+ * y el codigo postal haciendo referencia a la tabla codigo_postal ,ya que en la direccion se necesita proporcionar el codigo postal en la cual esta ubicada la direccion.  */
 CREATE TABLE DIRECCION(
 ID NUMBER(9) CONSTRAINT DIR_ID_NN NOT NULL CONSTRAINT DIR_ID_PK PRIMARY KEY,
 DIR VARCHAR(40) CONSTRAINT DIR_DIR_NN NOT NULL CONSTRAINT DIR_DIR_UN UNIQUE,
@@ -58,12 +79,16 @@ CODIGO_POSTAL NUMBER(7) CONSTRAINT DIR_CODIGO_POSTAL_NN NOT NULL CONSTRAINT DIR_
 );
 
 /*MOD*/
+/*La tabla modelo consta de un id, que identifica cada modelo diferente
+ * y el nombre, el cual describe el tipo de modelo del producto bien sea un nombre, color, tamaño por ejemplo: grande, negro...etc*/
 CREATE TABLE MODELO(
 ID NUMBER (9) CONSTRAINT MOD_ID_NN NOT NULL CONSTRAINT MOD_ID_PK PRIMARY KEY,
 NOMBRE VARCHAR(25) CONSTRAINT MOD_NOMBRE_NN NOT NULL CONSTRAINT MOD_NOMBRE_UN UNIQUE
 );
 
 /*CTR_D_OP*/
+/*La tabla CENTRO_DE_OPERACIONES esta formada por un id: todos los centros tienen uno distinto de distincion
+ * y la denominacion, la cual se escribe el nombre del centro de operaciones. */
 CREATE TABLE CENTRO_DE_OPERACIONES(
 ID NUMBER(9) CONSTRAINT CTR_D_OP_ID_NN NOT NULL CONSTRAINT CTR_D_OP_ID_PK PRIMARY KEY,
 DENOMINACION VARCHAR(20) CONSTRAINT CTR_D_OP_DENOMINACION_NN NOT NULL
@@ -71,12 +96,18 @@ DENOMINACION VARCHAR(20) CONSTRAINT CTR_D_OP_DENOMINACION_NN NOT NULL
 
 
 /*AL*/
+/*La tabla almacen esta compuesta por un numero id, el cual identifica el almacen a que hace referencia,
+ * la denominacion del almacen, esta puede ser el nombre del almacen,
+ * y el id del centro a que pertenece (ID_CENTRO_OPERACIONES) este ultimo hace refencia a la tabla centro de operaciones en las cuales se gestionan las oficionas y almacenes.*/
 CREATE TABLE ALMACEN(
 ID NUMBER(9) CONSTRAINT AL_ID_NN NOT NULL CONSTRAINT AL_ID_PK PRIMARY KEY,
 DENOMINACION VARCHAR(20) CONSTRAINT AL_DENOMINACION_NN NOT NULL,
 ID_CENTRO_OPERACIONES NUMBER(9) CONSTRAINT AL_ID_CENTRO_OPERACIONES_NN NOT NULL CONSTRAINT AL_ID_CENTRO_OPERACIONES_FK-CTR_D_OP/*REVISAR*/ REFERENCES CENTRO_DE_OPERACIONES(ID) ON DELETE CASCADE);
 
 /*OF*/
+/*La tabla oficona esta compuesta por un numero id, el cual identifica la oficina a la cual hace referencia,
+ * la denominacion del almacen, esta puede ser el nombre de la oficina por ejemplo: OFICINA PEPE,
+ * y el id del centro a que pertenece (ID_CENTRO_OPERACIONES) este ultimo hace refencia a la tabla centro de operaciones en las cuales se gestionan las oficionas y almacenes.*/
 CREATE TABLE OFICINA(
 ID NUMBER(9) CONSTRAINT OF_ID_NN NOT NULL CONSTRAINT OF_ID_PK PRIMARY KEY,
 DENOMINACION VARCHAR(20) CONSTRAINT OF_DENOMINACION_NN NOT NULL,
@@ -85,6 +116,7 @@ ID_CENTRO_OPERACIONES NUMBER(9) CONSTRAINT OF_ID_CENTRO_OPERACIONES_NN NOT NULL 
 
 
 /*EMP*/
+/**/
 CREATE TABLE EMPLEADO(
 DNI VARCHAR(9) CONSTRAINT EMP_DNI_NN NOT NULL CONSTRAINT EMP_DNI_PK PRIMARY KEY, 
 NOMBRE VARCHAR(20) CONSTRAINT EMP_NOMBRE_NN NOT NULL,
