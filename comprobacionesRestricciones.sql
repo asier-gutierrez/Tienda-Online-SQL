@@ -1,0 +1,1 @@
+/*Fichero script para comprobar las restricciones de integridad existentes sobre las tablas*/
