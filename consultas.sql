@@ -1,10 +1,147 @@
 /*FICHERO PARA HACER CONSULTAS (CADA UNO DESARROLLARA LAS SUYAS)*/
 
 /*IVAN*/
+1º Se quiere crear una vista con parte de la información de los usuarios, por seguridad, 
+donde no se tendrá acceso a la contraseña del cliente, ni a su DNI, ni a su fecha de nacimiento.
 
+SQL> CREATE VIEW DATOS_USUARIOS(NOMBRE,APELLIDO,MAIL) AS SELECT NOMBRE,APELLIDOS,EMAIL FROM EMPLEADO;
 
+Vista creada.
 
+SQL> SELECT * FROM DATOS_USUARIOS;
 
+Resultado:
+
+NOMBRE               APELLIDO                                                   
+-------------------- ----------------------------------------                   
+MAIL                                                                            
+-------------------------                                                       
+PEDRO                EGUNON                                                     
+PE@OPENDEUSTO.ES                                                                
+                                                                                
+SILVIA               ORTIZ                                                      
+SO@OPENDEUSTO.ES                                                                
+                                                                                
+JUAN                 GARAY                                                      
+JG@OPENDEUSTO.ES                                                                
+                                                                                
+
+NOMBRE               APELLIDO                                                   
+-------------------- ----------------------------------------                   
+MAIL                                                                            
+-------------------------                                                       
+ELENA                JIMENEZ                                                    
+EJ@OPENDEUSTO.ES                                                                
+                                                                                
+JONAN                OPORTO                                                     
+JO@OPENDEUSTO.ES                                                                
+                                                                                
+ANE                  MONSERRAT                                                  
+AM@OPENDEUSTO.ES                                                                
+                                                                                
+
+NOMBRE               APELLIDO                                                   
+-------------------- ----------------------------------------                   
+MAIL                                                                            
+-------------------------                                                       
+KEVIN                AMIANO                                                     
+KA@OPENDEUSTO.ES                                                                
+                                                                                
+CARLOS               CARCEDO                                                    
+CC@OPENDEUSTO.ES                                                                
+                                                                                
+CARLOTA              IGLESIAS                                                   
+CI@OPENDEUSTO.ES                                                                
+                                                                                
+
+NOMBRE               APELLIDO                                                   
+-------------------- ----------------------------------------                   
+MAIL                                                                            
+-------------------------                                                       
+MARTA                ABAITUA                                                    
+MA@OPENDEUSTO.ES                                                                
+                                                                                
+ROBERTO              BARREDO                                                    
+RB@OPENDEUSTO.ES                                                                
+                                                                                
+ASUNCION             CAMPO                                                      
+AC@OPENDEUSTO.ES                                                                
+ 
+
+2º El usuario Pedro se ha quejado de su pedido, por ello queremos saber qué empleado ha tramitado su pedido, 
+con su nombre, apellido y MAIL.
+
+SQL> SELECT E.NOMBRE,E.APELLIDOS,E.EMAIL FROM EMPLEADO E, PEDIDO P,USUARIO U WHERE U.NOMBRE= 'PEDRO' AND U.DNI=P.DNI_USUARIO AND P.DNI_EMPLEADO=E.DNI;
+
+Resultado:
+
+NOMBRE               APELLIDOS                                                  
+-------------------- ----------------------------------------                   
+EMAIL                                                                           
+-------------------------                                                       
+ELENA                JIMENEZ                                                    
+EJ@OPENDEUSTO.ES  
+
+3º Queremos saber el salario medio de cada puesto de los departamentos con media superior a 1600 €, ordendo el resultado por orden alfabético de puesto
+ (primero creamos una vista para sacar la media, y luego visualizamos el nombre de los departamentos).
+
+ SQL>CREATE VIEW MEDIA_SALARIOS(ID, MEDIA)AS SELECT ID_PUESTO, AVG(SALARIO) FROM EMPLEADO GROUP BY ID_PUESTO HAVING  AVG(SALARIO)>1600;
+
+Vista creada.
+
+SQL>SELECT P.DENOMINACION,M_S.MEDIA FROM PUESTO P, MEDIA_SALARIOS M_S WHERE M_S.ID=P.ID ORDER BY DENOMINACION;
+
+Resultado:
+
+DENOMINACION                        MEDIA                                       
+------------------------------ ----------                                       
+DIRECTOR                             2000                                       
+ENCARGADO                            2000                                       
+INTERNO                              1700                                       
+SECRETARIA                           2500                                       
+TECNICO                        1833,33333    
+
+4ª Se quiere saber la cantidad de modelos disponibles en el almacén cuya cantidad disponible sea mayor a la del modelo negro,
+indicando la cantidad disponible, la denominación del almacén y el nombre del modelo.
+
+SQL> SELECT CANTIDAD, A.DENOMINACION, M.NOMBRE FROM DISPONIBILIDAD D,
+  2  ALMACEN A, MODELO M WHERE D.ID_MODELO=M.ID AND D.ID_ALMACEN=A.ID
+  3  AND CANTIDAD>ANY(SELECT CANTIDAD FROM DISPONIBILIDAD
+  4  WHERE ID_MODELO=ANY(SELECT ID FROM MODELO WHERE NOMBRE='NEGRO'));
+
+Resultado:
+
+  CANTIDAD DENOMINACION         NOMBRE                                          
+---------- -------------------- -------------------------                       
+         8 INFOR                GRANDE                                          
+         4 TECHNO               ORO                                             
+         4 PRENDAS              PEQUEñO                                        
+         4 MATPRIMA             AZUL                                            
+         4 PRODUCTOTERMINADO    MINI                                            
+         3 REPUESTOS            PLUS                                            
+         2 PRODUCTOENCURSO      TALLA M                                         
+         2 ATUN                 PLATA                                           
+         2 MATOFICINA           MORADO                                          
+
+5º La usuaria Yasmín Martín quiere saber en qué estado estan sus pedidos, indicando la descripcion de su pedido y su estado.
+
+SQL>SELECT P.DESCRIPCION, E_P.DENOMINACION FROM PEDIDO P, ESTADO_PEDIDO E_P,USUARIO U WHERE P.DNI_USUARIO =(SELECT DNI FROM USUARIO WHERE NOMBRE = 'YASMIN' AND APELLIDO = 'MARTIN') AND P.ID_ESTADO_PEDIDO=E_P.ID;
+
+Resultado:
+
+DESCRIPCION                                                                     
+--------------------------------------------------------------------------------
+DENOMINACION                                                                    
+--------------------                                                            
+2 MOVILES                                                                       
+ENVIADO                                                                         
+                                                                                                                                               
+DESCRIPCION                                                                     
+--------------------------------------------------------------------------------
+DENOMINACION                                                                    
+--------------------                                                            
+1 MOVIL                                                                         
+DEVUELTO 
 
 /*ASIER*/
 
