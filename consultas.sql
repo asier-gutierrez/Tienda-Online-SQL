@@ -264,11 +264,6 @@ AMAIA
 
 
 /*YASMIN*/
-
-
-
-
-
 1.Obtener el nombre del empleado, que esta atendiendo las quejas, y a su vez la cantidad de quejas que esta atendiendo cada empleado ordenandolo por el nombre:
 
 SQL> SELECT DISTINCT NOMBRE, COUNT(DNI) FROM EMPLEADO, RECLAMACION_QUEJA WHERE DNI_EMPLEADO=DNI GROUP BY NOMBRE ORDER BY NOMBRE ASC;
