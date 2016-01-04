@@ -263,9 +263,162 @@ YASMIN
 AMAIA
 
 
-
-
-
-
-
 /*YASMIN*/
+
+
+
+
+
+1.Obtener el nombre del empleado, que esta atendiendo las quejas, y a su vez la cantidad de quejas que esta atendiendo cada empleado ordenandolo por el nombre:
+
+SQL> SELECT DISTINCT NOMBRE, COUNT(DNI) FROM EMPLEADO, RECLAMACION_QUEJA WHERE DNI_EMPLEADO=DNI GROUP BY NOMBRE ORDER BY NOMBRE ASC;
+
+NOMBRE               COUNT(DNI)                                                 
+-------------------- ----------                                                 
+ANE                           2                                                 
+CARLOS                        2                                                 
+CARLOTA                       2                                                 
+ELENA                         2                                                 
+JONAN                         1                                                 
+JUAN                          1                                                 
+KEVIN                         2                                                 
+
+7 filas seleccionadas.                                           
+
+2.Utilizando dos select por medio de un intersect obtener los datos de todos los usuarios de los cuales el numero dni empieze por 7 y el nombre empeize por la letra M. Hacerlo 
+tambien por medio de dos select, observando la diferencia de los dos metodos:
+
+SQL> SELECT * FROM USUARIO WHERE DNI LIKE '7%'
+  2  INTERSECT
+  3  SELECT * FROM USUARIO WHERE NOMBRE LIKE 'M%';
+
+DNI       NOMBRE                    APELLIDO                                    
+--------- ------------------------- ----------------------------------------    
+EMAIL                                                                           
+------------------------------------------------------------                    
+CONTRA                           FECHA_NA                                       
+-------------------------------- --------                                       
+78912345A MARTA                     ANGUIANO                                    
+MA@OPENDEUSTO.ES                                                                
+1111A                            28/12/95                                       
+                                                                                
+78945632K MARIA                     LOPEZ                                       
+ML@OPENDEUSTO.ES                                                                
+1001K                            11/06/93                                       
+
+DNI       NOMBRE                    APELLIDO                                    
+--------- ------------------------- ----------------------------------------    
+EMAIL                                                                           
+------------------------------------------------------------                    
+CONTRA                           FECHA_NA                                       
+-------------------------------- --------                                       
+                                                                                
+
+SQL> SELECT * FROM USUARIO WHERE DNI LIKE '7%'
+  2  UNION
+  3  SELECT * FROM USUARIO WHERE NOMBRE LIKE 'M%';
+
+DNI       NOMBRE                    APELLIDO                                    
+--------- ------------------------- ----------------------------------------    
+EMAIL                                                                           
+------------------------------------------------------------                    
+CONTRA                           FECHA_NA                                       
+-------------------------------- --------                                       
+74185296F LAURA                     RODRIGUEZ                                   
+LR@OPENDEUSTO.ES                                                                
+6666F                            22/11/90                                       
+                                                                                
+78912345A MARTA                     ANGUIANO                                    
+MA@OPENDEUSTO.ES                                                                
+1111A                            28/12/95                                       
+
+DNI       NOMBRE                    APELLIDO                                    
+--------- ------------------------- ----------------------------------------    
+EMAIL                                                                           
+------------------------------------------------------------                    
+CONTRA                           FECHA_NA                                       
+-------------------------------- --------                                       
+                                                                                
+78945623D IVAN                      FERNANDEZ                                   
+IM@OPENDEUSTO.ES                                                                
+4444D                            18/05/95                                       
+                                                                                
+78945632K MARIA                     LOPEZ                                       
+ML@OPENDEUSTO.ES                                                                
+
+DNI       NOMBRE                    APELLIDO                                    
+--------- ------------------------- ----------------------------------------    
+EMAIL                                                                           
+------------------------------------------------------------                    
+CONTRA                           FECHA_NA                                       
+-------------------------------- --------                                       
+1001K                            11/06/93                                       
+                                                                                
+
+3.Utilizar los metodos JOIN y SUBCONSULTA para obtener el nombre de los empleados, los cuales tengan el numero id del puesto 8888  (Gerente):
+
+SQL> SELECT DISTINCT NOMBRE FROM EMPLEADO, PUESTO WHERE ID_PUESTO=8888;
+
+NOMBRE                                                                          
+--------------------                                                            
+CARLOTA                                                                         
+
+SQL> SELECT DISTINCT NOMBRE FROM EMPLEADO WHERE ID_PUESTO=ANY (SELECT ID FROM PUESTO WHERE ID=8888 );
+
+NOMBRE                                                                          
+--------------------                                                            
+CARLOTA                                                                         
+                                                    
+
+4.Obtener el dni del usuario de los cuales han hecho el pedido en diciembre y a su vez descartar todos aquellos cuyo numero de dni no empieze por cuatro: 
+
+SQL> SELECT DNI_USUARIO FROM PEDIDO WHERE FECHA_PEDIDO BETWEEN '01-12-2015' AND '31-12-2015' GROUP BY DNI_USUARIO HAVING DNI_USUARIO LIKE '4%';
+
+DNI_USUAR                                                                       
+---------                                                                       
+45876562C                                                                       
+45615975B      
+
+5.Crear una vista en donde se almacenan el la descripcion, la id y el nombre de usuario de un pedido. Almacenar en esta vista todos aquellos pedidos en cuya descripcion haya 2 productos de un mismo producto.
+Mostrar luego el dni del usuario y la descripcion del pedido:
+
+SQL> CREATE VIEW P(DESCRIPCION, ID, DNI_USUARIO)
+  2  AS SELECT PED.DESCRIPCION, PED.ID, PED.DNI_USUARIO
+  3  FROM PEDIDO PED
+  4  WHERE PED.DESCRIPCION LIKE '2%'
+  5  GROUP BY PED.DESCRIPCION, PED.ID, PED.DNI_USUARIO;
+
+Vista creada.
+
+SQL> SELECT DNI_USUARIO, DESCRIPCION FROM P;
+
+DNI_USUAR                                                                       
+---------                                                                       
+DESCRIPCION                                                                     
+--------------------------------------------------------------------------------
+56390874E                                                                       
+2 CAMISETAS                                                                     
+                                                                                
+45615975B                                                                       
+2 MOVILES                                                                       
+                            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
