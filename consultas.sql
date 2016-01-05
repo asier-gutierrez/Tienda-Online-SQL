@@ -145,11 +145,9 @@ DEVUELTO
 
 /*ASIER*/
 
-/*ENUNCIADO: Se quiere hacer un estudio para determinar si el salario de los contables es
-demasiado bajo, para ello:*/
-/*Obtener el nombre, puesto y salario de los trabajadores que tienen un salario
-superior a la media del salario del puesto de contable*/
-
+/*ENUNCIADO: Se quiere hacer un estudio para determinar cual es el método de pago más utilizado*/
+/*Obtener el nombre, identificativo, número total de ventas realizadas e importe de todos los métodos de pago existentes*/
+SELECT NOMBRE
 
 /*ENUNCIADO: Se quiere conocer el empeño de los trabajadores que procesan pedidos. Como
 esto es una empresa nos dedicaremos a mirar los pedidos más caros. (En sumatorio de precios)*/
@@ -158,15 +156,24 @@ la suma de los importes de todas las consultas atendidas durante el periodo. Se 
 de la seguridad social y nombre del empleado. También mostrar el importe total facturado de los pedidos que ha procesado.
 Se puede hacer creando una vista.*/
 
-/*ENUNCIADO: Se quiere hacer una reducción de plantilla no , queremos ver cuales son los empleados que menor rendimiento
+/*ENUNCIADO: Se quiere hacer una reducción de plantilla, por ello, queremos ver cuales son los empleados que menor rendimiento
 han tenido en la empresa*/
 /*Obtener cuántos pedidos ha atendido cada empleado del departamento de quejas y reclamaciones durante el
 último año, indicando el número de la seguridad social y el número de quejas y reclamaciones atendidas para todos
 los que hayan realizado menos de 10.
-   
-*/
 
+/*ENUNCIADO: Se quiere mejorar la atención al cliente y el servicio post-venta en la ciudad que menos pedidos
+recibe con el fin de aumentar las ventas y reforzar la fidelización con nuestros clientes*/
+/*Obtener cual es la ciudad desde la cual se realizan menos pedidos (la ciudad a la que menos pedidos se envían).
+Mostrar nombre de la ciudad, identificativo, número de pedidos.*/
 
+/*ENUNCIADO: Se quiere enviar al cliente que más ha gastado un regalo con el fin de aumentar su fidelidad a nuestra tienda.*/
+/*Obtener dirección completa del cliente (ciudad, cp, calle) además de todos los datos personales necesarios del cliente que más ha gastado
+en nuestra tienda.*/
+
+/*ENUNCIADO: Se quiere realizar un conteo de todos los empleados de cada cargo existente en la empresa*/
+/*Obtener el cargo y el número de personas que ostentan dicho cargo.*/
+CREATE VIEW CONTEO (ID,NOMBRE,NUMPERSONAS) AS SELECT ID,DENOMINACION,COUNT(*) FROM PUESTO GROUP BY ID,DENOMINACION;
 
 
 /*MARTA*/
