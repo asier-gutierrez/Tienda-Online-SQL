@@ -147,7 +147,25 @@ DEVUELTO
 
 /*ENUNCIADO: Se quiere hacer un estudio para determinar cual es el método de pago más utilizado*/
 /*Obtener el nombre, identificativo, número total de ventas realizadas e importe de todos los métodos de pago existentes*/
-SELECT NOMBRE
+SQL> CREATE VIEW GASTOCONTIPO(ID,NOMBRE,GASTO) AS SELECT TDB.ID,TDB.DENOMINACION,SUM(P.PRECIO*C.CANTIDAD) FROM TIPO_DATO_BANCARIO TDB, DATO_BANCARIO DB, PRODUCTO P,PEDIDO PE, CONTIENE C WHERE TDB.ID=DB.ID_TIPO_DATO_BANCARIO AND DB.NUM=PE.NUM_DATO_BANCARIO AND PE.ID=C.ID_PEDIDO AND P.ID=C.ID_PRODUCTO GROUP BY TDB.ID,TDB.DENOMINACION;
+
+Vista creada.
+
+SQL> SELECT * FROM GASTOCONTIPO;
+
+        ID NOMBRE                         GASTO                                 
+---------- ------------------------- ----------                                 
+         5 MASTERCARD                        20                                 
+         2 PAYPAL                           170                                 
+         1 CUENTA CORRIENTE                1075                                 
+         3 TARJETA DE CREDITO               174                                 
+
+
+SQL> SELECT * FROM GASTOCONTIPO WHERE GASTO=(SELECT MAX(GASTO) FROM GASTOCONTIPO);
+
+        ID NOMBRE                         GASTO                                 
+---------- ------------------------- ----------                                 
+         1 CUENTA CORRIENTE                1075  
 
 /*ENUNCIADO: Se quiere conocer el empeño de los trabajadores que procesan pedidos. Como
 esto es una empresa nos dedicaremos a mirar los pedidos más caros. (En sumatorio de precios)*/
@@ -155,25 +173,195 @@ esto es una empresa nos dedicaremos a mirar los pedidos más caros. (En sumatori
 la suma de los importes de todas las consultas atendidas durante el periodo. Se debe indicar el número
 de la seguridad social y nombre del empleado. También mostrar el importe total facturado de los pedidos que ha procesado.
 Se puede hacer creando una vista.*/
+SQL> CREATE VIEW PROCESADO_DE_PEDIDO (NSS,NOMBRE,CANTIDAD,BENEFICIO)AS SELECT E.NSS,E.NOMBRE,COUNT(*),SUM(P.PRECIO*C.CANTIDAD) FROM EMPLEADO E, PEDIDO PE,PRODUCTO P,CONTIENE C WHERE E.DNI=PE.DNI_EMPLEADO AND FECHA_PEDIDO BETWEEN'06-12-2015' AND '06-01-2016'AND PE.ID=C.ID_PEDIDO AND P.ID=C.ID_PRODUCTO GROUP BY E.NSS,E.NOMBRE;
 
+Vista creada.
+
+SQL> SELECT * FROM PROCESADO_DE_PEDIDO;
+
+       NSS NOMBRE                 CANTIDAD  BENEFICIO                           
+---------- -------------------- ---------- ----------                           
+     67891 PEDRO                         2        260                           
+     78912 ELENA                         2        300                           
+     12345 JUAN                          1        240                           
+     85432 MARTA                         1         84                           
+
+SQL> SELECT * FROM PROCESADO_DE_PEDIDO WHERE BENEFICIO=(SELECT MAX(BENEFICIO) FROM PROCESADO_DE_PEDIDO);
+
+       NSS NOMBRE                 CANTIDAD  BENEFICIO                           
+---------- -------------------- ---------- ----------                           
+     78912 ELENA                         2        300                          
 /*ENUNCIADO: Se quiere hacer una reducción de plantilla, por ello, queremos ver cuales son los empleados que menor rendimiento
 han tenido en la empresa*/
 /*Obtener cuántos pedidos ha atendido cada empleado del departamento de quejas y reclamaciones durante el
 último año, indicando el número de la seguridad social y el número de quejas y reclamaciones atendidas para todos
 los que hayan realizado menos de 10.
+SQL> CREATE VIEW EFICIENCIA_EN_AC(NSS,N_RQ_ATENDIDAS) AS SELECT NSS,COUNT(*) FROM EMPLEADO E, RECLAMACION_QUEJA RQ WHERE E.DNI=RQ.DNI_EMPLEADO GROUP BY NSS;
 
+Vista creada.
+
+SQL> SELECT * FROM EFICIENCIA_EN_AC;
+
+       NSS N_RQ_ATENDIDAS                                                       
+---------- --------------                                                       
+     78912              2                                                       
+     89343              2                                                       
+     23896              2                                                       
+     34567              1                                                       
+     56231              2                                                       
+     12345              1                                                       
+     52346              2                                                       
+
+7 filas seleccionadas.
+
+SQL> SELECT * FROM EFICIENCIA_EN_AC WHERE N_RQ_ATENDIDAS<10;
+
+       NSS N_RQ_ATENDIDAS                                                       
+---------- --------------                                                       
+     78912              2                                                       
+     89343              2                                                       
+     23896              2                                                       
+     34567              1                                                       
+     56231              2                                                       
+     12345              1                                                       
+     52346              2                                                       
+
+7 filas seleccionadas.
 /*ENUNCIADO: Se quiere mejorar la atención al cliente y el servicio post-venta en la ciudad que menos pedidos
 recibe con el fin de aumentar las ventas y reforzar la fidelización con nuestros clientes*/
 /*Obtener cual es la ciudad desde la cual se realizan menos pedidos (la ciudad a la que menos pedidos se envían).
 Mostrar nombre de la ciudad, identificativo, número de pedidos.*/
+SQL> CREATE VIEW ENVIOSPORCIUDADES(CODIGO,NOMBRE,N_ENVIOS) AS SELECT C.ID,C.NOMBRE,COUNT(*) FROM CIUDAD C,PEDIDO P,DIRECCION D WHERE P.ID_DIRECCION=D.ID AND D.ID_CIUDAD=C.ID GROUP BY C.ID,C.NOMBRE;
 
+Vista creada.
+
+SQL> SELECT * FROM ENVIOSPORCIUDADES;
+
+    CODIGO NOMBRE                           N_ENVIOS                            
+---------- ------------------------------ ----------                            
+         6 VALENCIA                                1                            
+         1 MADRID                                  1                            
+         2 BARCELONA                               2                            
+        11 SANTANDER                               1                            
+         3 BILBAO                                  1                            
+         5 ZARAGOZA                                2                            
+         8 OVIEDO                                  1                            
+         4 SEVILLA                                 1                            
+         9 LA RIOJA                                1                            
+        12 ANDALUCIA                               1                            
+
+10 filas seleccionadas.
+
+SQL> SELECT * FROM ENVIOSPORCIUDADES WHERE N_ENVIOS=(SELECT MIN(N_ENVIOS) FROM ENVIOSPORCIUDADES);
+
+    CODIGO NOMBRE                           N_ENVIOS                            
+---------- ------------------------------ ----------                            
+         6 VALENCIA                                1                            
+         1 MADRID                                  1                            
+        11 SANTANDER                               1                            
+         3 BILBAO                                  1                            
+         8 OVIEDO                                  1                            
+         4 SEVILLA                                 1                            
+         9 LA RIOJA                                1                            
+        12 ANDALUCIA                               1                            
+
+8 filas seleccionadas.
 /*ENUNCIADO: Se quiere enviar al cliente que más ha gastado un regalo con el fin de aumentar su fidelidad a nuestra tienda.*/
 /*Obtener dirección completa del cliente (ciudad, cp, calle) además de todos los datos personales necesarios del cliente que más ha gastado
 en nuestra tienda.*/
+SQL> CREATE VIEW GASTOPORCLIENTES(DNI,NOMBRE,APELLIDO,EMAIL,TOTAL) AS SELECT U.DNI,U.NOMBRE,U.APELLIDO,U.EMAIL,SUM(P.PRECIO*C.CANTIDAD) FROM USUARIO U,PRODUCTO P,PEDIDO PE,CONTIENE C WHERE U.DNI=PE.DNI_USUARIO AND P.ID=C.ID_PRODUCTO AND PE.ID=C.ID_PEDIDO GROUP BY U.DNI,U.NOMBRE,U.APELLIDO,U.EMAIL;
 
+Vista creada.
+
+SQL> SELECT * FROM GASTOPORCLIENTES;
+
+DNI       NOMBRE                    APELLIDO                                    
+--------- ------------------------- ----------------------------------------    
+EMAIL                                                             TOTAL         
+------------------------------------------------------------ ----------         
+85296374H ROBERTO                   MENDEZ                                      
+RM@OPENDEUSTO.ES                                                     20         
+                                                                                
+14725836I AMAIA                     NUÃ‘EZ                                      
+AN@OPENDEUSTO.ES                                                    130         
+                                                                                
+56390874E CARLOS                    LANDA                                       
+CL@OPENDEUSTO.ES                                                    240         
+                                                                                
+
+DNI       NOMBRE                    APELLIDO                                    
+--------- ------------------------- ----------------------------------------    
+EMAIL                                                             TOTAL         
+------------------------------------------------------------ ----------         
+45615975B YASMIN                    MARTIN                                      
+YM@OPENDEUSTO.ES                                                    480         
+                                                                                
+96385274G PEDRO                     ZAPATERO                                    
+PZ@OPENDEUSTO.ES                                                     60         
+                                                                                
+78912345A MARTA                     ANGUIANO                                    
+MA@OPENDEUSTO.ES                                                     20         
+                                                                                
+
+DNI       NOMBRE                    APELLIDO                                    
+--------- ------------------------- ----------------------------------------    
+EMAIL                                                             TOTAL         
+------------------------------------------------------------ ----------         
+45876562C ASIER                     GUTIERREZ                                   
+AG@OPENDEUSTO.ES                                                    240         
+                                                                                
+74185296F LAURA                     RODRIGUEZ                                   
+LR@OPENDEUSTO.ES                                                     75         
+                                                                                
+32165478L JOSE                      ESCUDERO                                    
+JE@OPENDEUSTO.ES                                                     90         
+                                                                                
+
+DNI       NOMBRE                    APELLIDO                                    
+--------- ------------------------- ----------------------------------------    
+EMAIL                                                             TOTAL         
+------------------------------------------------------------ ----------         
+78945632K MARIA                     LOPEZ                                       
+ML@OPENDEUSTO.ES                                                     84         
+                                                                                
+
+10 filas seleccionadas.
+
+SQL> SELECT * FROM GASTOPORCLIENTES WHERE TOTAL=(SELECT MAX(TOTAL) FROM GASTOPORCLIENTES);
+
+DNI       NOMBRE                    APELLIDO                                    
+--------- ------------------------- ----------------------------------------    
+EMAIL                                                             TOTAL         
+------------------------------------------------------------ ----------         
+45615975B YASMIN                    MARTIN                                      
+YM@OPENDEUSTO.ES                                                    480         
 /*ENUNCIADO: Se quiere realizar un conteo de todos los empleados de cada cargo existente en la empresa*/
 /*Obtener el cargo y el número de personas que ostentan dicho cargo.*/
-CREATE VIEW CONTEO (ID,NOMBRE,NUMPERSONAS) AS SELECT ID,DENOMINACION,COUNT(*) FROM PUESTO GROUP BY ID,DENOMINACION;
+SQL> CREATE VIEW CONTEO(ID,NOMBRE,NUMPERSONAS) AS SELECT ID,DENOMINACION,COUNT(*) FROM PUESTO GROUP BY ID,DENOMINACION;
+
+Vista creada.
+
+SQL> SELECT * FROM CONTEO;
+
+        ID NOMBRE                         NUMPERSONAS                           
+---------- ------------------------------ -----------                           
+      1111 TECNICO                                  1                           
+      6666 DIRECTOR                                 1                           
+      1000 ADMINISTRADORA                           1                           
+      9999 SECRETARIA                               1                           
+      5555 BECARIO                                  1                           
+      1002 SUPERVISOR                               1                           
+      8888 GERENTE                                  1                           
+      4444 EMPLEADO                                 1                           
+      7777 INTERNO                                  1                           
+      1001 ASISTENTE                                1                           
+      2222 ENCARGADO                                1                           
+
+        ID NOMBRE                         NUMPERSONAS                           
+---------- ------------------------------ -----------                           
+      3333 JEFE                                     1                           
+
+12 filas seleccionadas.
 
 
 /*MARTA*/
