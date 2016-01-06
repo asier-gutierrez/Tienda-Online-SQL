@@ -190,12 +190,16 @@ SQL> SELECT * FROM PROCESADO_DE_PEDIDO WHERE BENEFICIO=(SELECT MAX(BENEFICIO) FR
 
        NSS NOMBRE                 CANTIDAD  BENEFICIO                           
 ---------- -------------------- ---------- ----------                           
-     78912 ELENA                         2        300                          
+     78912 ELENA                         2        300                   
+     
+     
+     
+
 /*ENUNCIADO: Se quiere hacer una reducción de plantilla, por ello, queremos ver cuales son los empleados que menor rendimiento
 han tenido en la empresa*/
 /*Obtener cuántos pedidos ha atendido cada empleado del departamento de quejas y reclamaciones durante el
 último año, indicando el número de la seguridad social y el número de quejas y reclamaciones atendidas para todos
-los que hayan realizado menos de 10.
+los que hayan realizado menos de 10.*/
 SQL> CREATE VIEW EFICIENCIA_EN_AC(NSS,N_RQ_ATENDIDAS) AS SELECT NSS,COUNT(*) FROM EMPLEADO E, RECLAMACION_QUEJA RQ WHERE E.DNI=RQ.DNI_EMPLEADO GROUP BY NSS;
 
 Vista creada.
@@ -227,6 +231,8 @@ SQL> SELECT * FROM EFICIENCIA_EN_AC WHERE N_RQ_ATENDIDAS<10;
      52346              2                                                       
 
 7 filas seleccionadas.
+
+
 /*ENUNCIADO: Se quiere mejorar la atención al cliente y el servicio post-venta en la ciudad que menos pedidos
 recibe con el fin de aumentar las ventas y reforzar la fidelización con nuestros clientes*/
 /*Obtener cual es la ciudad desde la cual se realizan menos pedidos (la ciudad a la que menos pedidos se envían).
@@ -266,6 +272,8 @@ SQL> SELECT * FROM ENVIOSPORCIUDADES WHERE N_ENVIOS=(SELECT MIN(N_ENVIOS) FROM E
         12 ANDALUCIA                               1                            
 
 8 filas seleccionadas.
+
+
 /*ENUNCIADO: Se quiere enviar al cliente que más ha gastado un regalo con el fin de aumentar su fidelidad a nuestra tienda.*/
 /*Obtener dirección completa del cliente (ciudad, cp, calle) además de todos los datos personales necesarios del cliente que más ha gastado
 en nuestra tienda.*/
@@ -334,7 +342,9 @@ DNI       NOMBRE                    APELLIDO
 EMAIL                                                             TOTAL         
 ------------------------------------------------------------ ----------         
 45615975B YASMIN                    MARTIN                                      
-YM@OPENDEUSTO.ES                                                    480         
+YM@OPENDEUSTO.ES                                                    480       
+
+
 /*ENUNCIADO: Se quiere realizar un conteo de todos los empleados de cada cargo existente en la empresa*/
 /*Obtener el cargo y el número de personas que ostentan dicho cargo.*/
 SQL> CREATE VIEW CONTEO(ID,NOMBRE,NUMPERSONAS) AS SELECT ID,DENOMINACION,COUNT(*) FROM PUESTO GROUP BY ID,DENOMINACION;
