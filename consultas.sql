@@ -275,7 +275,7 @@ SQL> SELECT * FROM ENVIOSPORCIUDADES WHERE N_ENVIOS=(SELECT MIN(N_ENVIOS) FROM E
 
 
 /*ENUNCIADO: Se quiere enviar al cliente que más ha gastado un regalo con el fin de aumentar su fidelidad a nuestra tienda.*/
-/*Obtener dirección completa del cliente (ciudad, cp, calle) además de todos los datos personales necesarios del cliente que más ha gastado
+/*Obtener  todos los datos personales del cliente que más ha gastado
 en nuestra tienda.*/
 SQL> CREATE VIEW GASTOPORCLIENTES(DNI,NOMBRE,APELLIDO,EMAIL,TOTAL) AS SELECT U.DNI,U.NOMBRE,U.APELLIDO,U.EMAIL,SUM(P.PRECIO*C.CANTIDAD) FROM USUARIO U,PRODUCTO P,PEDIDO PE,CONTIENE C WHERE U.DNI=PE.DNI_USUARIO AND P.ID=C.ID_PRODUCTO AND PE.ID=C.ID_PEDIDO GROUP BY U.DNI,U.NOMBRE,U.APELLIDO,U.EMAIL;
 
