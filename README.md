@@ -14,7 +14,7 @@ Estas son las carácterísticas de este proyecto:
 **Se pueden realizar cambios, pero puede que no funcione como es debido. Es decir, cualquiera puede editar, otra cosa es que le funcione porque lo haya hecho mal.*
 
 ### Versión
-0.5
+1.0
 
 ### Tecnologías
 
